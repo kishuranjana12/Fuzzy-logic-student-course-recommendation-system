@@ -1,237 +1,184 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Solitude - Course Recommendation System</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f2f2f7;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background: #fff;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #ccc;
-    }
-    .logo {
-      font-weight: bold;
-      color: #643ecb;
-      font-size: 1.2rem;
-    }
-    nav a {
-      margin: 0 1rem;
-      text-decoration: none;
-      color: #643ecb;
-      font-weight: 500;
-      cursor: pointer;
-    }
-    .hero-section {
-      max-width: 1000px;
-      margin: 3rem auto;
-      text-align: center;
-      padding: 2rem;
-    }
-    .hero-title {
-      font-size: 2.5rem;
-      color: #643ecb;
-      margin-bottom: 1rem;
-      font-weight: bold;
-    }
-    .hero-subtitle {
-      font-size: 1.2rem;
-      color: #666;
-      margin-bottom: 2rem;
-      line-height: 1.6;
-    }
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      margin: 3rem 0;
-    }
-    .feature-card {
-      background: #fff;
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-      text-align: center;
-    }
-    .feature-icon {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-    }
-    .feature-title {
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: #643ecb;
-      margin-bottom: 1rem;
-    }
-    .feature-desc {
-      color: #666;
-      line-height: 1.5;
-    }
-    .cta-button {
-      display: inline-block;
-      background: #643ecb;
-      color: white;
-      padding: 1rem 2.5rem;
-      text-decoration: none;
-      border-radius: 8px;
-      font-size: 1.1rem;
-      font-weight: bold;
-      margin: 2rem 0;
-      transition: background-color 0.3s;
-      border: none;
-      cursor: pointer;
-    }
-    .cta-button:hover {
-      background: #5434b0;
-    }
-    .stats {
-      background: #643ecb;
-      color: white;
-      padding: 3rem 2rem;
-      text-align: center;
-    }
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 2rem;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .stat-item {
-      text-align: center;
-    }
-    .stat-number {
-      font-size: 2.5rem;
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-    }
-    .stat-label {
-      font-size: 1.1rem;
-      opacity: 0.9;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCourse AI</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8fafc;
+            color: #263449;
+        }
+
+        nav {
+            background: white;
+            padding: 20px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        nav h2 {
+            color: #17365d;
+        }
+
+        nav a {
+            color: #334155;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 14px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 85px 20px 75px;
+            background: #edf4f8;
+        }
+
+        .hero h1 {
+            color: #17365d;
+            font-size: 38px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            color: #64748b;
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            background: #0d9488;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 5px;
+            font-size: 14px;
+        }
+
+        .btn.secondary {
+            background: #17365d;
+        }
+
+        .features {
+            padding: 45px 8%;
+            text-align: center;
+        }
+
+        .features h2 {
+            color: #17365d;
+            margin-bottom: 25px;
+            font-size: 25px;
+        }
+
+        .cards {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 25px 20px;
+            flex: 1;
+            min-width: 220px;
+            max-width: 320px;
+        }
+
+        .card h3 {
+            color: #17365d;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav a {
+                margin: 0 6px;
+            }
+
+            .hero h1 {
+                font-size: 30px;
+            }
+        }
+    </style>
 </head>
+
 <body>
-  <header>
-    <div class="logo">Solitude</div>
+
     <nav>
-      <a onclick="goToPage('index.html')">Home</a>
-      <a onclick="goToPage('input.html')">Recommendation</a>
-      <a onclick="goToPage('contact.html')">Contact</a>
+        <h2>SmartCourse AI</h2>
+        <div>
+            <a href="index.html">Home</a>
+            <a href="input.html">Recommendation</a>
+            <a href="skill-gap.html">Skill Gap</a>
+            <a href="contact.html">Contact</a>
+        </div>
     </nav>
-  </header>
 
-  <div class="hero-section">
-    <h1 class="hero-title">🎯 Smart Course Recommendations</h1>
-    <p class="hero-subtitle">
-      Discover the perfect courses tailored to your academic background, interests, and learning style using advanced AI-powered fuzzy logic algorithms.
-    </p>
-    
-    <button class="cta-button" onclick="goToPage('input.html')">
-      Get My Recommendations
-    </button>
+    <div class="hero">
+        <h1>Find the Right Course for You</h1>
+        <p>Explore course recommendations and identify your skill gaps.</p>
 
-    <div class="features">
-      <div class="feature-card">
-        <div class="feature-icon">🧠</div>
-        <div class="feature-title">AI-Powered Analysis</div>
-        <div class="feature-desc">
-          Our sophisticated fuzzy logic system analyzes your academic performance, subject grades, and personal interests to provide personalized recommendations.
-        </div>
-      </div>
-      
-      <div class="feature-card">
-        <div class="feature-icon">📊</div>
-        <div class="feature-title">Comprehensive Evaluation</div>
-        <div class="feature-desc">
-          We consider 13 different factors including CGPA, subject grades, interest levels, learning style, and course difficulty preferences.
-        </div>
-      </div>
-      
-      <div class="feature-card">
-        <div class="feature-icon">🎯</div>
-        <div class="feature-title">Precise Matching</div>
-        <div class="feature-desc">
-          Get confidence scores and detailed probability analysis for each course recommendation with clear explanations of why they match your profile.
-        </div>
-      </div>
+        <a href="input.html" class="btn">Get Recommendations</a>
+        <a href="skill-gap.html" class="btn secondary">Check Skill Gaps</a>
     </div>
-  </div>
 
-  <div class="stats">
-    <h2 style="margin-bottom: 2rem;">Our Recommendation System</h2>
-    <div class="stats-grid">
-      <div class="stat-item">
-        <div class="stat-number">13</div>
-        <div class="stat-label">Input Factors</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-number">242</div>
-        <div class="stat-label">Fuzzy Rules</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-number">5</div>
-        <div class="stat-label">Course Options</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-number">99%</div>
-        <div class="stat-label">Accuracy Rate</div>
-      </div>
-    </div>
-  </div>
+    <section class="features">
+        <h2>Our Features</h2>
 
-  <div class="hero-section">
-    <h2 style="color: #643ecb; margin-bottom: 1rem;">Available Courses</h2>
-    <div class="features">
-      <div class="feature-card">
-        <div class="feature-icon">🎮</div>
-        <div class="feature-title">Game Development</div>
-        <div class="feature-desc">Learn to create engaging games using modern programming languages and game engines.</div>
-      </div>
-      
-      <div class="feature-card">
-        <div class="feature-icon">🌐</div>
-        <div class="feature-title">Web Development</div>
-        <div class="feature-desc">Master frontend and backend technologies to build modern web applications.</div>
-      </div>
-      
-      <div class="feature-card">
-        <div class="feature-icon">🔬</div>
-        <div class="feature-title">Fuzzy Logic</div>
-        <div class="feature-desc">Explore advanced AI concepts and uncertain reasoning systems.</div>
-      </div>
-      
-      <div class="feature-card">
-        <div class="feature-icon">🗄️</div>
-        <div class="feature-title">Database Design</div>
-        <div class="feature-desc">Design efficient and scalable database systems for modern applications.</div>
-      </div>
-      
-      <div class="feature-card">
-        <div class="feature-icon">✅</div>
-        <div class="feature-title">Software Validation</div>
-        <div class="feature-desc">Learn testing methodologies and quality assurance practices for software systems.</div>
-      </div>
-    </div>
-    
-    <button class="cta-button" onclick="goToPage('input.html')">
-      Start Your Assessment
-    </button>
-  </div>
+        <div class="cards">
+            <div class="card">
+                <h3>Course Recommendation</h3>
+                <p>Find courses based on your interests and skills.</p>
+            </div>
 
-  <script>
-    function goToPage(page) {
-      window.location.href = page;
-    }
-  </script>
+            <div class="card">
+                <h3>Skill Gap Analysis</h3>
+                <p>Identify skills you need to improve.</p>
+            </div>
+
+            <div class="card">
+                <h3>Career Guidance</h3>
+                <p>Explore learning areas related to your career goals.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        SmartCourse AI | Course Recommendation System
+    </footer>
+
 </body>
 </html>

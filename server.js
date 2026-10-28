@@ -23,6 +23,60 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+const { analyze_skill_gap } = (() => {
+  const { spawnSync } = require('child_process');
+
+  return {
+    analyze_skill_gap: (careerGoal, knownSkills) => {
+      const script = `
+import json, sys
+from skill_gap_analyzer import analyze_skill_gap
+
+data = json.loads(sys.stdin.read())
+result = analyze_skill_gap(data["careerGoal"], data["knownSkills"])
+print(json.dumps(result))
+`;
+      const result = spawnSync(
+        process.platform === 'win32' ? 'python' : 'python3',
+        ['-c', script],
+        {
+          input: JSON.stringify({ careerGoal, knownSkills }),
+          encoding: 'utf8',
+          cwd: __dirname
+        }
+      );
+
+      if (result.status !== 0) {
+        throw new Error(result.stderr || 'Skill analysis failed');
+      }
+
+      return JSON.parse(result.stdout);
+    }
+  };
+})();
+
+app.post('/api/skill-gap', (req, res) => {
+  try {
+    const { careerGoal, knownSkills } = req.body;
+
+    if (typeof careerGoal !== 'string' || !Array.isArray(knownSkills)) {
+      return res.status(400).json({
+        success: false,
+        error: 'careerGoal and knownSkills are required'
+      });
+    }
+
+    const data = analyze_skill_gap(careerGoal, knownSkills);
+    res.json({ success: true, data });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+
 // Recommendation Endpoint
 app.post('/api/recommend', async (req, res) => {
   try {

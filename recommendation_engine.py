@@ -260,15 +260,25 @@ class CompleteFuzzyInferenceSystem:
         print(f"🐍 Loaded {len(self.rules)} FIS rules")
     
     def triangular_mf(self, x, params):
-        """Triangular membership function"""
+        """Calculate membership degree for triangular and shoulder functions."""
         a, b, c = params
-        if x <= a or x >= c:
+        # Handle left and right shoulder functions
+        if a == b and x == a:
+            return 1.0
+        if b == c and x == c:
+            return 1.0
+        # Outside the membership function
+        if x < a or x > c:
             return 0.0
-        elif a < x <= b:
-            return (x - a) / (b - a) if (b - a) != 0 else 1.0
-        else:
-            return (c - x) / (c - b) if (c - b) != 0 else 1.0
-    
+        # Rising side
+        if a < x < b:
+            return (x - a) / (b - a)
+        # Falling side
+        if b < x < c:
+            return(c - x) / (c - b)
+        return 0.0
+
+          
     def get_membership_degree(self, input_name, mf_name, value):
         """Get membership degree for a given input value"""
         if input_name not in self.inputs:
@@ -641,6 +651,10 @@ class CompleteRecommendationEngine:
         return scores
     
     def generate_recommendation(self, input_data):
+        
+        if 'subjectGrades' in input_data:
+            return self.generate_six_subject_recommendation(input_data)
+
         """MAIN FUNCTION - EXACT Python version of your MATLAB recommendation system"""
         
         # Convert input to row array (same order as MATLAB: 1-13)
@@ -752,6 +766,105 @@ class CompleteRecommendationEngine:
         print(f"🐍 FINAL: {result['firstRecommendedCourse']} (confidence: {result['firstConfidence']:.3f})")
         
         return result
+
+    
+    def generate_six_subject_recommendation(self, input_data):
+        """Generate recommendations using the six subject grades."""
+
+        subject_names = {
+            'softComputing': 'Soft Computing',
+            'daa': 'DAA',
+            'aiSubject': 'Artificial Intelligence',
+            'softwareEngineering': 'Software Engineering',
+            'cyberSecurity': 'Cyber Security',
+            'advancedJava': 'Advanced Java'
+        }
+
+        weights = {
+            'Gaming': {
+                'softComputing': 0.18, 'daa': 0.18, 'aiSubject': 0.24,
+                'softwareEngineering': 0.12, 'cyberSecurity': 0.06,
+                'advancedJava': 0.22
+            },
+            'Web Development': {
+                'softComputing': 0.06, 'daa': 0.18, 'aiSubject': 0.12,
+                'softwareEngineering': 0.24, 'cyberSecurity': 0.12,
+                'advancedJava': 0.28
+            },
+            'Fuzzy Logic': {
+                'softComputing': 0.30, 'daa': 0.18, 'aiSubject': 0.30,
+                'softwareEngineering': 0.06, 'cyberSecurity': 0.06,
+                'advancedJava': 0.10
+            },
+            'Database Design': {
+                'softComputing': 0.06, 'daa': 0.18, 'aiSubject': 0.06,
+                'softwareEngineering': 0.24, 'cyberSecurity': 0.18,
+                'advancedJava': 0.28
+            },
+            'Software Validation & Verification': {
+                'softComputing': 0.12, 'daa': 0.18, 'aiSubject': 0.12,
+                'softwareEngineering': 0.30, 'cyberSecurity': 0.24,
+                'advancedJava': 0.12
+            }
+        }
+
+        grades = input_data.get('subjectGrades', {})
+        cgpa = float(input_data.get('cgpaOutOf10', 0))
+
+        if not 0 <= cgpa <= 10:
+            raise ValueError("CGPA must be between 0 and 10.")
+
+        for key in subject_names:
+            if key not in grades:
+                raise ValueError(f"Missing subject grade: {subject_names[key]}")
+
+            grade = float(grades[key])
+            if not 0 <= grade <= 10:
+                raise ValueError(f"Invalid grade for {subject_names[key]}")
+
+        difficulty = str(input_data.get('difficulty', 'Moderate')).lower()
+        difficulty_factor = {
+            'easy': 1.00,
+            'moderate': 1.00,
+            'difficult': 1.00
+        }
+
+        if difficulty not in difficulty_factor:
+            raise ValueError("Difficulty must be Easy, Moderate, or Difficult.")
+
+        cgpa_factor = 0.70 + 0.30 * (cgpa / 10)
+        scores = {}
+
+        for course, course_weights in weights.items():
+            subject_score = sum(
+                (float(grades[key]) / 10) * course_weights[key]
+                for key in subject_names
+            )
+
+            scores[course] = round(
+                subject_score * cgpa_factor * 100, 2
+            )
+
+        ranked = sorted(scores.items(), key=lambda item: item[1], reverse=True)
+        primary, primary_score = ranked[0]
+        alternative, alternative_score = ranked[1]
+
+        reason = (
+            f"{primary} is the best match based on your subject grades "
+            f"and CGPA. {alternative} is your next-best alternative."
+        )
+
+        return {
+            'firstRecommendedCourse': primary,
+            'alternativeRecommendedCourse': alternative,
+            'firstConfidence': primary_score,
+            'secondConfidence': alternative_score,
+            'finalRecommendation': primary,
+            'recommendationReason': reason,
+            'processingMethod': 'Six_Subject_Weighted_Scoring',
+            'timestamp': datetime.now().isoformat()
+        }
+
 
 
 # Main class for external use
